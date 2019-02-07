@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css">
+      <style>
+            #wander-slider-wrapper {
+                height: 200px;
+                background-color: #eaeaea;
+                overflow: hidden;
+                position: relative;
+            }
+
+            .wander-slider-item {
+                top: 50%;
+                -webkit-transform: translate(-50%,-50%);
+                transform: translate(-50%,-50%);
+                background-color: cadetblue;
+                border: 1px solid #333;
+                position: absolute;
+                border-radius: 10px;
+                text-align: center;
+                display: flex;
+                justify-content: center;
+                flex-direction: column;
+                text-align: center;
+                -webkit-transition: all 0.5s ease;
+                -moz-transition: all 0.5s ease;
+                -o-transition: all 0.5s ease;
+                transition: all 0.5s ease;
+            }
+          
+          .centerItem {
+              left: 50%;
+              width: 150px;
+              height: 150px;
+              z-index: 1000;
+          }
+          
+          .firstLeftItem {
+              left: 25%;
+              width: 100px;
+              height: 100px;
+              opacity: 0.5;
+              z-index: 900;
+          }
+          .secondLeftItem {
+              left: 10%;
+              width: 70px;
+              height: 70px;
+              opacity: 0.2;
+              z-index: 800;
+          }
+          .firstRightItem {
+              left: 75%;
+              width: 100px;
+              height: 100px;
+              opacity: 0.5;
+              z-index: 900;
+          }
+          .secondRightItem {
+              left: 90%;
+              width: 70px;
+              height: 70px;
+              opacity: 0.2;
+              z-index: 800;
+          }
+          .hideCardItem {
+              display: none;
+          }
+      </style>
+
+    <title>slider</title>
+  </head>
+  <body>
+    <h1>Custom Card Slider</h1>
+    <div id="wander-slider-wrapper" class="d-xs-block d-sm-block d-md-none d-lg-none d-xl-none">
+        <div class="wander-slider-item">0</div>
+        <div class="wander-slider-item">1</div>
+        <div class="wander-slider-item">2</div>
+        <div class="wander-slider-item">3</div>
+        <div class="wander-slider-item">4</div>
+    </div>
+      
+    <div id="itemNumber"></div>
+    <button id="leftBtn" class="btn btn-primary" >Pan left</button>
+    <button id="rightBtn" class="btn btn-primary" >Pan right</button>
+    
+    
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+      
+    <script src="js/hammer.js"></script>
+    <script src="js/index.js"></script>
+    <script>
+        $(document).ready(function(){
+
+            let wanderItems = $(".wander-slider-item")
+            
+            let middleItem = 0;
+            let panSensitivity = 10;
+            let panTriggered = 0;
+            let autoRotate = true;
+            let rotateInterval = 3000;
+            var cardRotator;
+            
+            if(autoRotate) {
+                cardRotator = setInterval(panCardsLeft, rotateInterval);
+            } 
+            
+            
+            $("#leftBtn").click(function(){
+                panCardsLeft()
+                clearInterval(cardRotator)
+            });
+            
+            $("#rightBtn").click(function(){
+                panCardsRight()
+                clearInterval(cardRotator)
+            });
+            
+            
+            // initial card setup
+            wanderItems.each(function(index) {
+                if(index == middleItem){
+                    $(this).addClass("centerItem")
+                }
+                
+                if(index == middleItem + 1) {
+                    $(this).addClass("firstLeftItem")
+                }
+                
+                if(index == middleItem + 2) {
+                    $(this).addClass("secondLeftItem")
+                }
+                
+                if(index >= middleItem + 3) {
+                    $(this).addClass("hideCardItem")
+                }
+                
+                if(index == wanderItems.length - 1) {
+                    $(this).addClass("firstRightItem")
+                    $(this).removeClass("hideCardItem")
+                }
+                if(index == wanderItems.length - 2) {
+                    $(this).addClass("secondRightItem")
+                    $(this).removeClass("hideCardItem")
+                }
+
+            })
+            
+            
+            var wanderSlider = document.getElementById('wander-slider-wrapper');
+            
+            $('.wander-slider-item').each(function(index){
+                var $this = $(this);
+                var mc = new Hammer(this);
+                mc.on("tap", function() {
+                    console.log('Slide ' + index + ' was tapped!');
+                    return false;
+                });
+            });
+
+            // create a simple instance
+            // by default, it only adds horizontal recognizers
+            var mc = new Hammer(wanderSlider);
+            
+            // let the pan gesture support all directions.
+            // this will block the vertical scrolling on a touch-device while on the element
+            mc.get('pan').set({ direction: Hammer.DIRECTION_ALL, threshold: 10 });
+
+            // listen to events...
+            
+            mc.on("panleft panright", function(ev) {
+                clearInterval(cardRotator)
+                if(ev.type == "panleft") {
+                    panTriggered ++;
+//                    console.log(panTriggered)
+//                    console.log(wanderItems)
+                    
+                    if(panTriggered == panSensitivity) {
+                        panCardsLeft()
+                        panTriggered = 0;
+                    }
+                    
+                }
+                if(ev.type == "panright") {
+                    panTriggered ++;
+                    if(panTriggered == panSensitivity) {
+                        panCardsRight()
+                        panTriggered = 0;
+                    }
+                    
+                }
+            });
+            
+            
+            function panCardsLeft(){
+                let checkElementClass = $(".wander-slider-item")
+                
+                checkElementClass.each(function(index){
+                    
+                    if($(this).hasClass("secondLeftItem")) {
+                        
+                        $(this).removeClass("secondLeftItem")
+                        if(wanderItems.length > 5){
+                            $(this).addClass("hideCardItem")
+                        } else {
+                            $(this).addClass("secondRightItem")
+                            $(this).data("class-skip","true")
+                        }
+                        
+                    }
+                    
+                    if($(this).hasClass("firstLeftItem")) {
+                        $(this).removeClass("firstLeftItem")
+                        $(this).addClass("secondLeftItem")
+                    }
+                                       
+                    if($(this).hasClass("centerItem")) {
+                        $(this).removeClass("centerItem");
+                        $(this).addClass("firstLeftItem");
+                    }
+                    
+                    if($(this).hasClass("firstRightItem")) {
+                        $(this).removeClass("firstRightItem");
+                        $(this).addClass("centerItem");
+                    }
+                    
+                    if($(this).data("class-skip") == "true"){
+                        $(this).data("class-skip","false")
+                    } else {
+                        if($(this).hasClass("secondRightItem")) {
+                            $(this).removeClass("secondRightItem");
+                            $(this).addClass("firstRightItem");
+                        }
+                    }
+                    
+                    
+                    
+                })
+                
+            }
+            
+            function panCardsRight(){
+                let checkElementClass = $(".wander-slider-item")
+                checkElementClass.each(function(index){
+                    
+                    if($(this).hasClass("secondRightItem")) {
+                        $(this).removeClass("secondRightItem");
+                        if(wanderItems.length > 5){
+                            $(this).addClass("hideCardItem")
+                        } else {
+                            $(this).addClass("secondLeftItem")
+                            $(this).data("class-skip","true")
+                        }
+                    }
+                    
+                    if($(this).hasClass("firstRightItem")) {
+                        $(this).removeClass("firstRightItem");
+                        $(this).addClass("secondRightItem");
+                    }
+                                       
+                    if($(this).hasClass("centerItem")) {
+                        $(this).removeClass("centerItem");
+                        $(this).addClass("firstRightItem");
+                        
+                    }
+                    
+                    if($(this).hasClass("firstLeftItem")) {
+                        $(this).removeClass("firstLeftItem")
+                        $(this).addClass("centerItem")
+                    }
+                    
+                    if($(this).data("class-skip") == "true") {
+                        $(this).data("class-skip","false")
+                    } else {
+                        if($(this).hasClass("secondLeftItem")) {
+                            $(this).removeClass("secondLeftItem");
+                            $(this).addClass("firstLeftItem");
+                        }
+                    }
+                    
+                })
+                
+            }
+            
+            
+        })
+        
+        
+    
+    </script>
+  </body>
+</html>
