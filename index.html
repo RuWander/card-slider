@@ -71,7 +71,11 @@
               z-index: 800;
           }
           .hideCardItem {
-              display: none;
+              left:1%;
+              width: 20px;
+              height: 20px;
+              top:1px; !important
+              display: inline;
           }
       </style>
 
@@ -85,6 +89,9 @@
         <div class="wander-slider-item">2</div>
         <div class="wander-slider-item">3</div>
         <div class="wander-slider-item">4</div>
+        <div class="wander-slider-item">5</div>
+        <div class="wander-slider-item">6</div>
+        <div class="wander-slider-item">7</div>
     </div>
       
     <div id="itemNumber"></div>
@@ -101,204 +108,6 @@
       
     <script src="js/hammer.js"></script>
     <script src="js/index.js"></script>
-    <script>
-        $(document).ready(function(){
-
-            let wanderItems = $(".wander-slider-item")
-            
-            let middleItem = 0;
-            let panSensitivity = 10;
-            let panTriggered = 0;
-            let autoRotate = true;
-            let rotateInterval = 3000;
-            var cardRotator;
-            
-            if(autoRotate) {
-                cardRotator = setInterval(panCardsLeft, rotateInterval);
-            } 
-            
-            
-            $("#leftBtn").click(function(){
-                panCardsLeft()
-                clearInterval(cardRotator)
-            });
-            
-            $("#rightBtn").click(function(){
-                panCardsRight()
-                clearInterval(cardRotator)
-            });
-            
-            
-            // initial card setup
-            wanderItems.each(function(index) {
-                if(index == middleItem){
-                    $(this).addClass("centerItem")
-                }
-                
-                if(index == middleItem + 1) {
-                    $(this).addClass("firstLeftItem")
-                }
-                
-                if(index == middleItem + 2) {
-                    $(this).addClass("secondLeftItem")
-                }
-                
-                if(index >= middleItem + 3) {
-                    $(this).addClass("hideCardItem")
-                }
-                
-                if(index == wanderItems.length - 1) {
-                    $(this).addClass("firstRightItem")
-                    $(this).removeClass("hideCardItem")
-                }
-                if(index == wanderItems.length - 2) {
-                    $(this).addClass("secondRightItem")
-                    $(this).removeClass("hideCardItem")
-                }
-
-            })
-            
-            
-            var wanderSlider = document.getElementById('wander-slider-wrapper');
-            
-            $('.wander-slider-item').each(function(index){
-                var $this = $(this);
-                var mc = new Hammer(this);
-                mc.on("tap", function() {
-                    console.log('Slide ' + index + ' was tapped!');
-                    return false;
-                });
-            });
-
-            // create a simple instance
-            // by default, it only adds horizontal recognizers
-            var mc = new Hammer(wanderSlider);
-            
-            // let the pan gesture support all directions.
-            // this will block the vertical scrolling on a touch-device while on the element
-            mc.get('pan').set({ direction: Hammer.DIRECTION_ALL, threshold: 10 });
-
-            // listen to events...
-            
-            mc.on("panleft panright", function(ev) {
-                clearInterval(cardRotator)
-                if(ev.type == "panleft") {
-                    panTriggered ++;
-//                    console.log(panTriggered)
-//                    console.log(wanderItems)
-                    
-                    if(panTriggered == panSensitivity) {
-                        panCardsLeft()
-                        panTriggered = 0;
-                    }
-                    
-                }
-                if(ev.type == "panright") {
-                    panTriggered ++;
-                    if(panTriggered == panSensitivity) {
-                        panCardsRight()
-                        panTriggered = 0;
-                    }
-                    
-                }
-            });
-            
-            
-            function panCardsLeft(){
-                let checkElementClass = $(".wander-slider-item")
-                
-                checkElementClass.each(function(index){
-                    
-                    if($(this).hasClass("secondLeftItem")) {
-                        
-                        $(this).removeClass("secondLeftItem")
-                        if(wanderItems.length > 5){
-                            $(this).addClass("hideCardItem")
-                        } else {
-                            $(this).addClass("secondRightItem")
-                            $(this).data("class-skip","true")
-                        }
-                        
-                    }
-                    
-                    if($(this).hasClass("firstLeftItem")) {
-                        $(this).removeClass("firstLeftItem")
-                        $(this).addClass("secondLeftItem")
-                    }
-                                       
-                    if($(this).hasClass("centerItem")) {
-                        $(this).removeClass("centerItem");
-                        $(this).addClass("firstLeftItem");
-                    }
-                    
-                    if($(this).hasClass("firstRightItem")) {
-                        $(this).removeClass("firstRightItem");
-                        $(this).addClass("centerItem");
-                    }
-                    
-                    if($(this).data("class-skip") == "true"){
-                        $(this).data("class-skip","false")
-                    } else {
-                        if($(this).hasClass("secondRightItem")) {
-                            $(this).removeClass("secondRightItem");
-                            $(this).addClass("firstRightItem");
-                        }
-                    }
-                    
-                    
-                    
-                })
-                
-            }
-            
-            function panCardsRight(){
-                let checkElementClass = $(".wander-slider-item")
-                checkElementClass.each(function(index){
-                    
-                    if($(this).hasClass("secondRightItem")) {
-                        $(this).removeClass("secondRightItem");
-                        if(wanderItems.length > 5){
-                            $(this).addClass("hideCardItem")
-                        } else {
-                            $(this).addClass("secondLeftItem")
-                            $(this).data("class-skip","true")
-                        }
-                    }
-                    
-                    if($(this).hasClass("firstRightItem")) {
-                        $(this).removeClass("firstRightItem");
-                        $(this).addClass("secondRightItem");
-                    }
-                                       
-                    if($(this).hasClass("centerItem")) {
-                        $(this).removeClass("centerItem");
-                        $(this).addClass("firstRightItem");
-                        
-                    }
-                    
-                    if($(this).hasClass("firstLeftItem")) {
-                        $(this).removeClass("firstLeftItem")
-                        $(this).addClass("centerItem")
-                    }
-                    
-                    if($(this).data("class-skip") == "true") {
-                        $(this).data("class-skip","false")
-                    } else {
-                        if($(this).hasClass("secondLeftItem")) {
-                            $(this).removeClass("secondLeftItem");
-                            $(this).addClass("firstLeftItem");
-                        }
-                    }
-                    
-                })
-                
-            }
-            
-            
-        })
-        
-        
     
-    </script>
   </body>
 </html>
