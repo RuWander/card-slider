@@ -31,7 +31,14 @@ $(document).ready(function () {
 
   // initial card setup
   wanderItems.each(function (index) {
-    if (wanderItems.length < 5) {
+
+    if (wanderItems.length == 2) {
+      wanderItems.eq(0).addClass("centerItem");
+      wanderItems.eq(1).addClass("firstRightItem");
+      return false;
+    }
+
+    if (wanderItems.length < 5 && wanderItems.length > 2) {
       if (index == middleItem) {
         $(this).addClass("centerItem")
         $(this).attr("converted", false)
@@ -147,6 +154,15 @@ $(document).ready(function () {
     console.log("PASS " + sliderCount + " ---------------------------------------")
 
     checkElementClass.each(function (index) {
+      if (wanderItems.length == 2) {
+        wanderItems.eq(0).removeClass("centerItem");
+        wanderItems.eq(0).addClass("firstLeftItem");
+
+        wanderItems.eq(1).removeClass("firstRightItem");
+        wanderItems.eq(1).addClass("centerItem");
+        return false;
+      }
+
       if (wanderItems.length < 5) {
         if ($(this).hasClass("firstLeftItem")){
           $(this).removeClass("firstLeftItem")
@@ -187,8 +203,6 @@ $(document).ready(function () {
         }
 
       }
-
-
 
       if (wanderItems.length < 5) {
         // CENTER --> FIRST LEFT
@@ -258,7 +272,10 @@ $(document).ready(function () {
     })
     console.log("PASS " + sliderCount + " ---------------------------------------")
     console.log(hiddenItemsArray)
-    backtoFrontRight()
+    if (wanderItems.length > 2) {
+      backtoFrontRight()
+    }
+    
 
 
   }
@@ -289,6 +306,15 @@ $(document).ready(function () {
     let hiddenItems = $(".hideCardItem");
 
     checkElementClass.each(function (index) {
+      if (wanderItems.length == 2) {
+        wanderItems.eq(0).removeClass("firstLeftItem");
+        wanderItems.eq(0).addClass("centerItem");
+
+        wanderItems.eq(1).removeClass("centerItem");
+        wanderItems.eq(1).addClass("firstRightItem");
+        return false;
+      }
+
       if (wanderItems.length < 5) {
         if ($(this).hasClass("firstRightItem")){
           $(this).removeClass("firstRightItem")
@@ -396,52 +422,10 @@ $(document).ready(function () {
       }
 
     })
-
-
-
-    // checkElementClass.each(function (index) {
-
-    //   if ($(this).hasClass("secondRightItem")) {
-    //     $(this).removeClass("secondRightItem");
-    //     if (wanderItems.length > 5) {
-    //       $(this).addClass("hideCardItem")
-    //       hiddenItemsArray.push($(this))
-    //     } else {
-    //       $(this).addClass("secondLeftItem")
-    //       $(this).data("class-skip", "true")
-    //     }
-    //   }
-
-    //   if ($(this).hasClass("firstRightItem")) {
-    //     $(this).removeClass("firstRightItem");
-    //     $(this).addClass("secondRightItem");
-    //   }
-
-    //   if ($(this).hasClass("centerItem")) {
-    //     $(this).removeClass("centerItem");
-    //     $(this).addClass("firstRightItem");
-
-    //   }
-
-    //   if ($(this).hasClass("firstLeftItem")) {
-    //     $(this).removeClass("firstLeftItem")
-    //     $(this).addClass("centerItem")
-    //   }
-
-    //   if ($(this).data("class-skip") == "true") {
-    //     $(this).data("class-skip", "false")
-    //   } else {
-    //     if ($(this).hasClass("secondLeftItem")) {
-
-    //       $(this).removeClass("secondLeftItem");
-    //       $(this).addClass("firstLeftItem");
-
-    //     }
-    //   }
-
-    // })
-
-    frontToBackLeft()
+    if (wanderItems.length > 2) {
+      frontToBackLeft()
+    }
+    
   }
 
   function frontToBackLeft() {
