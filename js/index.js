@@ -11,7 +11,7 @@ $(document).ready(function () {
   let sliderCount = 0;
   let hiddenItemsArray = []
   let returnval = wanderItems.length - 5;
-  console.log("THIS IS RETURN VALUE" + returnval)
+  // console.log("THIS IS RETURN VALUE" + returnval)
 
   if (autoRotate) {
     cardRotator = setInterval(panCardsLeft, rotateInterval);
@@ -102,7 +102,7 @@ $(document).ready(function () {
 
   })
 
-  console.log(hiddenItemsArray)
+  // console.log(hiddenItemsArray)
   var wanderSlider = document.getElementById('wander-slider-wrapper');
 
   $('.wander-slider-item').each(function (index) {
@@ -151,7 +151,7 @@ $(document).ready(function () {
     let hiddenItems = $(".hideCardItem");
     sliderCount++;
 
-    console.log("PASS " + sliderCount + " ---------------------------------------")
+    // console.log("PASS " + sliderCount + " ---------------------------------------")
 
     checkElementClass.each(function (index) {
       if (wanderItems.length == 2) {
@@ -250,7 +250,7 @@ $(document).ready(function () {
         $(this).attr("class-skip", "false");
 
       } else {
-        console.log("SKIP NOT TRUE")
+        // console.log("SKIP NOT TRUE")
         if (wanderItems.length < 5) {
           if ($(this).hasClass("firstRightItem")) {
             // console.log("5. 2 RIGHT -> 1 RIGHT")
@@ -270,8 +270,8 @@ $(document).ready(function () {
       }
 
     })
-    console.log("PASS " + sliderCount + " ---------------------------------------")
-    console.log(hiddenItemsArray)
+    // console.log("PASS " + sliderCount + " ---------------------------------------")
+    // console.log(hiddenItemsArray)
     if (wanderItems.length > 2) {
       backtoFrontRight()
     }
@@ -283,20 +283,20 @@ $(document).ready(function () {
 
   function backtoFrontRight() {
     if (wanderItems.length < 5) {
-      console.log("ARRAY SMALLER THAN 5")
-      console.log("6. HIDDEN -> 2 RIGHT")
+      // console.log("ARRAY SMALLER THAN 5")
+      // console.log("6. HIDDEN -> 2 RIGHT")
       hiddenItemsArray[hiddenItemsArray.length - 1].removeClass("hideCardItem");
       hiddenItemsArray[hiddenItemsArray.length - 1].addClass("firstRightItem");
-      console.log(hiddenItemsArray.pop())
+      hiddenItemsArray.pop()
     } else if (wanderItems.length == 5) {
-      console.log("ARRAY == 5")
-      console.log("already handled with skip in loop")
+      // console.log("ARRAY == 5")
+      // console.log("already handled with skip in loop")
     } else {
-      console.log("ARRAY GREATER THAN 5")
-      console.log("6. HIDDEN -> 2 RIGHT")
+      // console.log("ARRAY GREATER THAN 5")
+      // console.log("6. HIDDEN -> 2 RIGHT")
       hiddenItemsArray[hiddenItemsArray.length - 1].removeClass("hideCardItem");
       hiddenItemsArray[hiddenItemsArray.length - 1].addClass("secondRightItem");
-      console.log(hiddenItemsArray.pop())
+      hiddenItemsArray.pop()
     }
 
   }
@@ -402,7 +402,7 @@ $(document).ready(function () {
         $(this).attr("class-skip", "false");
 
       } else {
-        console.log("SKIP NOT TRUE")
+        // console.log("SKIP NOT TRUE")
         if (wanderItems.length < 5) {
           if ($(this).hasClass("firstLeftItem")) {
             // console.log("5. 2 RIGHT -> 1 RIGHT")
@@ -430,25 +430,21 @@ $(document).ready(function () {
 
   function frontToBackLeft() {
     if (wanderItems.length < 5) {
-      console.log("ARRAY SMALLER THAN 5")
-      console.log(hiddenItemsArray[0])
+      // console.log("ARRAY SMALLER THAN 5")
+      // console.log(hiddenItemsArray[0])
       hiddenItemsArray[0].removeClass("hideCardItem");
       hiddenItemsArray[0].addClass("firstLeftItem");
-      console.log(hiddenItemsArray.shift())
+      hiddenItemsArray.shift()
     } else if (wanderItems.length == 5) {
-      console.log("ARRAY == 5")
-      console.log("already handled with skip in loop")
+      // console.log("ARRAY == 5")
+      // console.log("already handled with skip in loop")
     } else {
-      console.log("ARRAY GREATER THAN 5")
+      // console.log("ARRAY GREATER THAN 5")
       hiddenItemsArray[0].removeClass("hideCardItem");
       hiddenItemsArray[0].addClass("secondLeftItem");
-      console.log(hiddenItemsArray.shift())
+      hiddenItemsArray.shift()
     }
 
-    // console.log("6. HIDDEN -> 2 RIGHT")
-    // hiddenItemsArray[0].removeClass("hideCardItem");
-    // hiddenItemsArray[0].addClass("secondLeftItem");
-    // console.log(hiddenItemsArray.shift())
   }
 
 })
